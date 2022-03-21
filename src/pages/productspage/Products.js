@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { client } from "../../client";
+import Pagination from "../../components/pagination/Pagination";
 import ProductsContent from "./ProductsContent";
 
 const Products = ({
@@ -8,6 +9,7 @@ const Products = ({
   isFilterCategory5_12,
 }) => {
   const [products, setProducts] = useState([]);
+  const [pageIndex, setPageIndex] = useState(0);
 
   //   Cleanup Products data
 
@@ -53,21 +55,46 @@ const Products = ({
   );
 
   //   getProducts from Contentful
+
   const getProducts = useCallback(async () => {
-    try {
-      const response = await client.getEntries({
-        content_type: "petProducts",
-      });
-      const productsResponse = response.items;
-      if (productsResponse) {
-        cleanUpProductsResponse(productsResponse);
-      } else {
-        setProducts([]);
+    if (isFilterCategory6_23 || isFilterCategory2_5 || isFilterCategory5_12) {
+      try {
+        const response = await client.getEntries({
+          content_type: "petProducts",
+        });
+        const productsResponse = response.items;
+        if (productsResponse) {
+          cleanUpProductsResponse(productsResponse);
+        } else {
+          setProducts([]);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      try {
+        const response = await client.getEntries({
+          content_type: "petProducts",
+          skip: pageIndex * 5,
+          limit: 5,
+        });
+        const productsResponse = response.items;
+        if (productsResponse) {
+          cleanUpProductsResponse(productsResponse);
+        } else {
+          setProducts([]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }, [cleanUpProductsResponse]);
+  }, [
+    isFilterCategory6_23,
+    isFilterCategory2_5,
+    isFilterCategory5_12,
+    cleanUpProductsResponse,
+    pageIndex,
+  ]);
 
   const check = (e) => {
     e.preventDefault();
@@ -84,6 +111,15 @@ const Products = ({
 
         setProducts([...sortedProducts]);
       }
+    }
+  };
+
+  const pagination = (e) => {
+    e.preventDefault();
+    if (pageIndex < 3) {
+      setPageIndex(pageIndex + 1);
+    } else {
+      setPageIndex(0);
     }
   };
 
@@ -128,6 +164,14 @@ const Products = ({
               return <ProductsContent key={product.id} product={product} />;
             })}
           </div>
+
+          {isFilterCategory6_23 ||
+          isFilterCategory2_5 ||
+          isFilterCategory5_12 ? (
+            ""
+          ) : (
+            <Pagination pageIndex={pageIndex} pagination={pagination} />
+          )}
         </div>
       </section>
     </div>
@@ -135,12 +179,3 @@ const Products = ({
 };
 
 export default Products;
-
-// else if (e.detail === -1) {
-//   console.log("high");
-//   const sortedProducts = products.sort(
-//     (a, b) => b.productPrice - a.productPrice
-//   );
-//   console.log(sortedProducts);
-//   setProducts([...sortedProducts]);
-// }

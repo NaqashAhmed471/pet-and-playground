@@ -515,7 +515,7 @@ header {
   display: block;
 }
 
-/* .page-item:last-child .page-link,
+.page-item:last-child .page-link,
 .page-item:first-child .page-link {
   border-radius: 50%;
   border-color: transparent;
@@ -559,7 +559,7 @@ header {
   right: 0;
   width: 36px;
   height: 36px;
-  background: url(../images/next-arrow.png) center center no-repeat;
+  background: url(./../public/images/next-arrow.png) center center no-repeat;
   background-color: #dadada;
 }
 .product-pagination .previous {
@@ -567,9 +567,9 @@ header {
   left: 0;
   width: 36px;
   height: 36px;
-  background: url(../images/prev-arrow.png) center center no-repeat;
+  background: url(./../public/images/prev-arrow.png) center center no-repeat;
   background-color: #dadada;
-}  */
+}
 /*_-Product_Page CSS End-_*/
 
 /*_-Content CSS end-_*/

@@ -51,6 +51,7 @@ const DiscoverProducts = () => {
     try {
       const response = await client.getEntries({
         content_type: "petProducts",
+        limit: 5,
       });
       const productsResponse = response.items;
       if (productsResponse) {
