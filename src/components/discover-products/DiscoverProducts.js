@@ -62,12 +62,14 @@ const DiscoverProducts = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [cleanUpProductsResponse]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getTitles();
     getProducts();
-  }, [getTitles, getProducts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (titles && products) {
     const { title, subTitle } = titles;

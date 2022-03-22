@@ -9,7 +9,7 @@ const Playgrounds = () => {
     const cleanPlaygroundData = playgroundRawData.map((playgroundData) => {
       const { sys, fields } = playgroundData;
       const { id } = sys;
-      const { title, playgroundCategory, description , categoryUrl } = fields;
+      const { title, playgroundCategory, description, categoryUrl } = fields;
       const playgroundImage = fields.playgroundImage.fields.file.url;
 
       return {
@@ -39,11 +39,13 @@ const Playgrounds = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [cleanUpPlaygroundData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getPlayground();
-  }, [getPlayground]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section className="playground-sec">
@@ -61,19 +63,17 @@ const Playgrounds = () => {
             {playgrounds
               .slice(0)
               .reverse()
-              .slice(2,3)
+              .slice(2, 3)
               .map((playground) => {
                 const { id } = playground;
                 return <PlaygroundsContent key={id} playground={playground} />;
               })}
           </div>
           <div className="col-md-4">
-            {playgrounds
-              .slice(1,3)
-              .map((playground) => {
-                const { id } = playground;
-                return <PlaygroundsContent key={id} playground={playground} />;
-              })}
+            {playgrounds.slice(1, 3).map((playground) => {
+              const { id } = playground;
+              return <PlaygroundsContent key={id} playground={playground} />;
+            })}
           </div>
         </div>
       </div>

@@ -25,7 +25,8 @@ const NewLetter = () => {
 
   useEffect(() => {
     getTitles();
-  }, [getTitles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (titles && img) {
     const { title, subTitle } = titles;

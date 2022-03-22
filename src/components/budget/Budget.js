@@ -27,11 +27,13 @@ const Budget = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [cleanUpBudgetData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getBudgetData();
-  }, [getBudgetData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (data && img) {
     return (

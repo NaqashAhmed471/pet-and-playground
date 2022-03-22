@@ -29,7 +29,8 @@ const Header = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [cleanUpLogoData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //   cleanHeaderLinksData
   const cleanUpHeaderLinksData = useCallback((headerLinksRawData) => {
@@ -55,12 +56,14 @@ const Header = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [cleanUpHeaderLinksData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getLogo();
     getHeaderLinks();
-  }, [getLogo, getHeaderLinks]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <header>

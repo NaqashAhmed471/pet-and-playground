@@ -26,7 +26,8 @@ const ProductBanner = () => {
 
   useEffect(() => {
     getBannerData();
-  }, [getBannerData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (banner && img) {
     const { title, btnText, btnLink } = banner;
