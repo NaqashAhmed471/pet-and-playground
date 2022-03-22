@@ -2,9 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { client } from "../../client";
 import { useParams } from "react-router-dom";
 import ProductDetail from "./ProductDetail";
+import Loader from "../../components/loader/Loader";
 
 const SingleProduct = () => {
   const [productDetail, setproductDetail] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
 
   //   cleanProductData
@@ -25,6 +27,7 @@ const SingleProduct = () => {
 
   //   getSingleProductData from contentful
   const getSingleProduct = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await client.getEntry(id);
       if (response) {
@@ -32,14 +35,22 @@ const SingleProduct = () => {
       } else {
         setproductDetail({});
       }
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
-  }, [cleanUpSingleProductData, id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   useEffect(() => {
     getSingleProduct();
-  }, [getSingleProduct]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return <ProductDetail productDetail={productDetail} />;
 };

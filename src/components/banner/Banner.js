@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { client } from "../../client";
+import Loader from "../loader/Loader";
 
 const Banner = () => {
   const [banner, setBanner] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // cleanBannerData
-  const cleanUpBannerDate = useCallback((bannerRawData) => {
+  const cleanUpBannerData = useCallback((bannerRawData) => {
     const clearBannerData = bannerRawData.map((bannerData) => {
       const { sys, fields } = bannerData;
       const { id } = sys;
@@ -26,24 +28,33 @@ const Banner = () => {
 
   // getBannerData from contentful
   const getBanner = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await client.getEntries({
         content_type: "petBanner",
       });
       const responseBannerData = response.items;
       if (responseBannerData) {
-        cleanUpBannerDate(responseBannerData);
+        cleanUpBannerData(responseBannerData);
       } else {
         setBanner([]);
       }
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
-  }, [cleanUpBannerDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getBanner();
-  }, [getBanner]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return banner.map((bannerContent) => {
     const {
