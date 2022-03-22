@@ -13,7 +13,7 @@ const Products = ({
   const [pageCount, setPageCount] = useState(0);
 
   const productsPerPage = 5;
-  const pagesVisited = pageNumber * productsPerPage;
+  const pagesVisited = pageNumber;
 
   //   Cleanup Products data
 
@@ -79,18 +79,16 @@ const Products = ({
       try {
         const response = await client.getEntries({
           content_type: "petProducts",
+          skip: pagesVisited * productsPerPage,
+          limit: productsPerPage,
         });
         const productsResponse = response.items;
-        const displayProducts = productsResponse.slice(
-          pagesVisited,
-          pagesVisited + productsPerPage
-        );
-        if (displayProducts) {
-          cleanUpProductsResponse(displayProducts);
+        if (productsResponse) {
+          cleanUpProductsResponse(productsResponse);
         } else {
           setProducts([]);
         }
-        setPageCount(Math.ceil(productsResponse.length / productsPerPage));
+        setPageCount(Math.ceil(17 / productsPerPage));
       } catch (error) {
         console.log(error);
       }
