@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import ReactPaginate from "react-paginate";
 import { client } from "../../client";
-import Loader from "../../components/loader/Loader";
-import Pagination from "../../components/pagination/Pagination";
 import ProductsContent from "./ProductsContent";
 
 const Products = ({
@@ -10,8 +9,11 @@ const Products = ({
   isFilterCategory5_12,
 }) => {
   const [products, setProducts] = useState([]);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+
+  const productsPerPage = 5;
+  const pagesVisited = pageNumber * productsPerPage;
 
   //   Cleanup Products data
 
@@ -60,7 +62,6 @@ const Products = ({
 
   const getProducts = useCallback(async () => {
     if (isFilterCategory6_23 || isFilterCategory2_5 || isFilterCategory5_12) {
-      setIsLoading(true);
       try {
         const response = await client.getEntries({
           content_type: "petProducts",
@@ -71,37 +72,35 @@ const Products = ({
         } else {
           setProducts([]);
         }
-        setIsLoading(false);
       } catch (error) {
         console.log(error);
-        setIsLoading(false);
       }
     } else {
-      setIsLoading(true);
       try {
         const response = await client.getEntries({
           content_type: "petProducts",
-          skip: pageIndex * 5,
-          limit: 5,
         });
         const productsResponse = response.items;
-        if (productsResponse) {
-          cleanUpProductsResponse(productsResponse);
+        const displayProducts = productsResponse.slice(
+          pagesVisited,
+          pagesVisited + productsPerPage
+        );
+        if (displayProducts) {
+          cleanUpProductsResponse(displayProducts);
         } else {
           setProducts([]);
         }
-        setIsLoading(false);
+        setPageCount(Math.ceil(productsResponse.length / productsPerPage));
       } catch (error) {
         console.log(error);
-        setIsLoading(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isFilterCategory6_23,
     isFilterCategory2_5,
     isFilterCategory5_12,
-    pageIndex,
+    cleanUpProductsResponse,
+    pagesVisited,
   ]);
 
   const check = (e) => {
@@ -122,23 +121,13 @@ const Products = ({
     }
   };
 
-  const pagination = (e) => {
-    e.preventDefault();
-    if (pageIndex < 3) {
-      setPageIndex(pageIndex + 1);
-    } else {
-      setPageIndex(0);
-    }
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
   };
 
   useEffect(() => {
     getProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  if (isLoading) {
-    return <Loader />;
-  }
+  }, [getProducts]);
 
   return (
     <div className="content">
@@ -183,7 +172,17 @@ const Products = ({
           isFilterCategory5_12 ? (
             ""
           ) : (
-            <Pagination pageIndex={pageIndex} pagination={pagination} />
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              pageCount={pageCount}
+              onPageChange={changePage}
+              containerClassName={"paginationBttns"}
+              previousLinkClassName={"previousBttn"}
+              nextLinkClassName={"nextBttn"}
+              disabledClassName={"paginationDisabled"}
+              activeClassName={"paginationActive"}
+            />
           )}
         </div>
       </section>

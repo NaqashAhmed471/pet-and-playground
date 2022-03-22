@@ -520,7 +520,7 @@ header {
   border-radius: 50%;
   border-color: transparent;
 }
-.product-pagination {
+/* .product-pagination {
   padding-top: 40px;
 }
 .product-pagination .page-link {
@@ -569,7 +569,7 @@ header {
   height: 36px;
   background: url(./../public/images/prev-arrow.png) center center no-repeat;
   background-color: #dadada;
-}
+} */
 /*_-Product_Page CSS End-_*/
 
 /*_-Content CSS end-_*/
@@ -1285,3 +1285,28 @@ footer .copyrights p {
 }
 
 /* Loader css end */
+
+/* Pagination css start */
+.paginationBttns {
+  width: 80%;
+  height: 40px;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+.paginationBttns a {
+  padding: 10px;
+  margin: 8px;
+  border-radius: 5px;
+  border: 1px solid #ff3239;
+  color: #ff3239;
+  cursor: pointer;
+}
+.paginationBttns a:hover {
+  color: white !important;
+  background-color: #ff3239;
+}
+.paginationActive a {
+  color: white !important;
+  background-color: #ff3239;
+}
