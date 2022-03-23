@@ -64,7 +64,7 @@ const Products = ({
 
   const getProducts = useCallback(async () => {
     if (isFilterCategory6_23 || isFilterCategory2_5 || isFilterCategory5_12) {
-      // setIsLoading(true);
+      setIsLoading(true);
       try {
         const response = await client.getEntries({
           content_type: "petProducts",
@@ -75,9 +75,10 @@ const Products = ({
         } else {
           setProducts([]);
         }
-        // setIsLoading(false);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     } else {
       setIsLoading(true);
