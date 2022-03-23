@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ReactPaginate from "react-paginate";
 import { client } from "../../client";
+import Loader from "../../components/loader/Loader";
 import ProductsContent from "./ProductsContent";
 
 const Products = ({
@@ -11,6 +12,7 @@ const Products = ({
   const [products, setProducts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [pageCount, setPageCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const productsPerPage = 5;
   const pagesVisited = pageNumber;
@@ -62,6 +64,7 @@ const Products = ({
 
   const getProducts = useCallback(async () => {
     if (isFilterCategory6_23 || isFilterCategory2_5 || isFilterCategory5_12) {
+      // setIsLoading(true);
       try {
         const response = await client.getEntries({
           content_type: "petProducts",
@@ -72,10 +75,12 @@ const Products = ({
         } else {
           setProducts([]);
         }
+        // setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     } else {
+      setIsLoading(true);
       try {
         const response = await client.getEntries({
           content_type: "petProducts",
@@ -83,14 +88,17 @@ const Products = ({
           limit: productsPerPage,
         });
         const productsResponse = response.items;
+
         if (productsResponse) {
           cleanUpProductsResponse(productsResponse);
         } else {
           setProducts([]);
         }
         setPageCount(Math.ceil(17 / productsPerPage));
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     }
   }, [
@@ -126,6 +134,10 @@ const Products = ({
   useEffect(() => {
     getProducts();
   }, [getProducts]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="content">
@@ -180,6 +192,7 @@ const Products = ({
               nextLinkClassName={"nextBttn"}
               disabledClassName={"paginationDisabled"}
               activeClassName={"paginationActive"}
+              initialPage={pageNumber}
             />
           )}
         </div>
